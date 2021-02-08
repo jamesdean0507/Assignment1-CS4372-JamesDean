@@ -23,9 +23,9 @@ int main()
     // First line : version
     getline(infile, inputTxt);
 
-    if (inputTxt.compare("P2") != 0) 
+    if (inputTxt.compare("P2") != 0)
         cerr << "Version error" << endl;
-    else 
+    else
         cout << "Version : " << inputTxt << endl;
 
     // Second line : comment
@@ -34,7 +34,7 @@ int main()
 
     // Continue with a stringstream
     ss << infile.rdbuf();
-    
+
     // Third line : size
     ss >> numcols >> numrows;
     cout << numcols << " columns and " << numrows << " rows" << endl;
@@ -49,25 +49,17 @@ int main()
             ss >> array[row][col];
         }
     }
-    // Now print the array to see the result
-    for(row = 0; row < numrows; ++row) 
-    {
-        for(col = 0; col < numcols; ++col) 
-        {
-            cout << array[row][col] << " ";
-        }
-        cout << endl;
-    }
+
     infile.close();
     return 0;
 }
 
-int varianceThreshold() 
+int varianceThreshold()
 {
     int threshold;
     cout << "Specify Variance Threshold (0-1024): " << endl;
     cin >> threshold;
-    while (threshold < 0 || threshold > 1024) 
+    while (threshold < 0 || threshold > 1024)
     {
         cout << "Please try again \n"
             << "Variance Threshold must be an integer between 0 and 1024.\n";
@@ -86,7 +78,7 @@ int arithmeticMean(int arr[], int arrSize)
     return (sum / arrSize);
 }
 
-int arithmeticVariance(int arr[], int arrSize, int varianceThreshold) 
+int arithmeticVariance(int arr[], int arrSize, int varianceThreshold)
 {
     int sum, base;
     for (int i = 1; i <= arrSize; i++)
