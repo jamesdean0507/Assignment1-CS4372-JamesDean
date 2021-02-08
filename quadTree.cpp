@@ -6,6 +6,8 @@
 
 using namespace std;
 
+int** inputToArray();
+
 int varianceThreshold();
 
 int arithmeticMean(int[], int);
@@ -15,6 +17,21 @@ int arithmeticVariance(int[], int, int);
 int main()
 {
     int threshold = varianceThreshold();
+    int arr[][] = inputToArray();
+
+    cout << arr[0][0] << "[0][0]\n";
+    cout << arr[0][1] << "[0][1]\n";
+    cout << arr[1][1] << "[1][1]\n";
+
+    ofstream out;
+    out.open("baboonOutput.pgma");
+    out.close();
+
+    return 0;
+}
+
+int** inputToArray()
+{
     int row = 0, col = 0, numrows = 0, numcols = 0;
     ifstream infile("baboon.pgma");
     stringstream ss;
@@ -51,7 +68,7 @@ int main()
     }
 
     infile.close();
-    return 0;
+    return array;
 }
 
 int varianceThreshold()
