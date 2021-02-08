@@ -6,35 +6,21 @@
 
 using namespace std;
 
-int** inputToArray();
-
 int varianceThreshold();
 
-int arithmeticMean(int[], int);
+int arithmeticMean(int[], int, int);
 
-int arithmeticVariance(int[], int, int);
+int arithmeticVariance(int[], int, int, int);
 
 int main()
 {
     int threshold = varianceThreshold();
-    int arr[][] = inputToArray();
 
-    cout << arr[0][0] << "[0][0]\n";
-    cout << arr[0][1] << "[0][1]\n";
-    cout << arr[1][1] << "[1][1]\n";
-
-    ofstream out;
-    out.open("baboonOutput.pgma");
-    out.close();
-
-    return 0;
-}
-
-int** inputToArray()
-{
-    int row = 0, col = 0, numrows = 0, numcols = 0;
+    int row = 0, col = 0, numRows = 0, numCols = 0;
     ifstream infile("baboon.pgma");
     stringstream ss;
+    ofstream out;
+    out.open("baboonOutput.pgma");
     string inputTxt = "";
 
     // First line : version
@@ -44,31 +30,40 @@ int** inputToArray()
         cerr << "Version error" << endl;
     else
         cout << "Version : " << inputTxt << endl;
+        out << inputTxt << endl;
 
     // Second line : comment
     getline(infile,inputTxt);
     cout << "Comment : " << inputTxt << endl;
+    out << inputTxt << endl;
 
     // Continue with a stringstream
     ss << infile.rdbuf();
 
     // Third line : size
-    ss >> numcols >> numrows;
-    cout << numcols << " columns and " << numrows << " rows" << endl;
+    ss >> numCols >> numRows;
+    cout << numCols << " columns and " << numRows << " rows" << endl;
+    out << numCols << "  " << numRows << endl;
 
-    int array[numrows][numcols];
+    int array[numRows][numCols];
 
     // Following lines : data
-    for(row = 0; row < numrows; ++row)
+    for(row = 0; row < numRows; ++row)
     {
-        for (col = 0; col < numcols; ++col)
+        for (col = 0; col < numCols; ++col)
         {
             ss >> array[row][col];
+            out << array[row][col] << "  ";
         }
+        out << endl;
     }
 
     infile.close();
-    return array;
+
+
+    out.close();
+
+    return 0;
 }
 
 int varianceThreshold()
@@ -85,23 +80,30 @@ int varianceThreshold()
     return threshold;
 }
 
-int arithmeticMean(int arr[], int arrSize)
+int arithmeticMean(int arr[][], int rowSize, int colSize)
 {
     int sum = 0;
-    for (int i = 1; i <= arrSize; i++)
+    for (int i = 1; i <= rowSize; i++)
     {
-        sum = sum + arr[i];
+        for(int n = 1; n <= colSize; n++)
+        {
+            sum = sum + arr[i][n];
+        }
     }
-    return (sum / arrSize);
+    return (sum / (rowSize * colSize));
 }
 
-int arithmeticVariance(int arr[], int arrSize, int varianceThreshold)
+int arithmeticVariance(int arr[][], int rowSize, int colSize, int varianceThreshold)
 {
     int sum, base;
-    for (int i = 1; i <= arrSize; i++)
+    int arrSize = rowSize * colSize;
+    for (int i = 1; i <= rowSize; i++)
     {
-        base = arr[i] - varianceThreshold;
-        sum = sum + pow(base, 2);
+        for (int n = 1; n <= colSize; n++)
+        {
+            base = arr[i][n] - varianceThreshold;
+            sum = sum + pow(base, 2);
+        }
     }
     return (sum / (arrSize - 1));
 }
