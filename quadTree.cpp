@@ -10,10 +10,6 @@ int THRESHOLD;
 
 int varianceThreshold();
 
-int arithmeticMean(quadTree);
-
-int arithmeticVariance(quadTree);
-
 struct Point
 {
     int x;
@@ -80,6 +76,8 @@ public:
     void insert(Node*);
     Node* find(Point);
     bool inContainer(Point);
+    int arithmeticMean();
+    int arithmeticVariance();
 };
 
 void quadTree::insert(Node *_node)
@@ -239,6 +237,36 @@ bool quadTree::inContainer(Point point)
     }
 }
 
+int quadTree::arithmeticMean()
+{
+    int sum = 0;
+    int quadSize =  (abs(bottomRight.x - topLeft.x)) * (abs(topLeft.y - bottomRight.y));
+
+    for (int i = 1; i <= quadSize; i++)
+    {
+        sum = sum + node->data;
+        node++;
+    }
+
+    return (sum / quadSize);
+}
+
+int quadTree::arithmeticVariance()
+{
+    int sum, base;
+    int quadSize =  (abs(bottomRight.x - topLeft.x)) * (abs(topLeft.y - bottomRight.y));
+    int mean = arithmeticMean();
+
+    for (int i = 1; i <= quadSize; i++)
+    {
+        base = node->data - mean;
+        sum = sum + pow(base, 2);
+        node++;
+    }
+
+    return (sum / (quadSize - 1));
+}
+
 int main()
 {
     THRESHOLD = varianceThreshold();
@@ -314,33 +342,4 @@ int varianceThreshold()
         cin >> _threshold;
     }
     return _threshold;
-}
-
-int arithmeticMean(quadTree quad)
-{
-    int sum = 0;
-    int quadSize =  (abs(quad.bottomRight.x - quad.topLeft.x)) * (abs(quad.topLeft.y - quad.bottomRight.y));
-
-    for (int i = 1; i <= quadSize; i++)
-    {
-        sum = sum + quad.node->data;
-        quad.node++;
-    }
-
-    return (sum / quadSize);
-}
-
-int arithmeticVariance(quadTree quad)
-{
-    int sum, base;
-    int quadSize =  (abs(quad.bottomRight.x - quad.topLeft.x)) * (abs(quad.topLeft.y - quad.bottomRight.y));
-
-    for (int i = 1; i <= quadSize; i++)
-    {
-        base = quad.node->data - arithmeticMean(quad);
-        sum = sum + pow(base, 2);
-        quad.node++;
-    }
-
-    return (sum / (quadSize - 1));
 }
