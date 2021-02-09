@@ -112,9 +112,9 @@ void quadTree::insert(Node *_node)
             }
             topLeftQuad->insert(_node);
 
-            if (arithmeticVariance(topLeftQuad) <= THRESHOLD)
+            if (arithmeticVariance() <= THRESHOLD)
             {
-                topLeftQuad->node->data = arithmeticMean(topLeftQuad);
+                topLeftQuad->node->data = arithmeticMean();
                 return;
             }
         }
@@ -127,9 +127,9 @@ void quadTree::insert(Node *_node)
             }
             bottomLeftQuad->insert(_node);
 
-            if (arithmeticVariance(bottomLeftQuad) <= THRESHOLD)
+            if (arithmeticVariance() <= THRESHOLD)
             {
-                bottomLeftQuad->node->data = arithmeticMean(bottomLeftQuad);
+                bottomLeftQuad->node->data = arithmeticMean();
                 return;
             }
         }
@@ -145,9 +145,9 @@ void quadTree::insert(Node *_node)
             }
             topRightQuad->insert(_node);
 
-            if (arithmeticVariance(topRightQuad) <= THRESHOLD)
+            if (arithmeticVariance() <= THRESHOLD)
             {
-                topRightQuad->node->data = arithmeticMean(topRightQuad);
+                topRightQuad->node->data = arithmeticMean();
                 return;
             }
         }
@@ -160,9 +160,9 @@ void quadTree::insert(Node *_node)
             }
             bottomRightQuad->insert(_node);
 
-            if (arithmeticVariance(bottomRightQuad) <= THRESHOLD)
+            if (arithmeticVariance() <= THRESHOLD)
             {
-                bottomRightQuad->node->data = arithmeticMean(bottomRightQuad);
+                bottomRightQuad->node->data = arithmeticMean();
                 return;
             }
         }
@@ -315,7 +315,7 @@ int main()
     Node node(Point(numRows, numCols), array);
     image.insert(&node);
 
-    for (row = 0; row < numRows; ++row) 
+    for (row = 0; row < numRows; ++row)
     {
         for (col = 0; col < numCols; ++col)
         {
