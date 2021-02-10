@@ -1,6 +1,7 @@
 #include "Node.cpp"
 #include "Point.cpp"
 #include "math.h"
+#include <cmath>
 #include <stddef.h>
 
 class QuadTree
