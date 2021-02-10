@@ -23,29 +23,26 @@ int main()
     stringstream ss;
     ofstream out;
     out.open("baboonOutput.pgma");
+    ofstream copy;
+    copy.open("baboonCopy.pgma");
     string inputTxt = "";
 
-    // First line : version
     getline(infile, inputTxt);
 
     if (inputTxt.compare("P2") != 0)
         cerr << "Version error" << endl;
-    else
-        cout << "Version : " << inputTxt << endl;
-        out << inputTxt << endl;
-
-    // Second line : comment
-    getline(infile,inputTxt);
-    cout << "Comment : " << inputTxt << endl;
     out << inputTxt << endl;
+    copy << inputTxt << endl;
 
-    // Continue with a stringstream
+    getline(infile,inputTxt);
+    out << inputTxt << endl;
+    copy << inputTxt << endl;
+
     ss << infile.rdbuf();
 
-    // Third line : size
     ss >> numCols >> numRows;
-    cout << numCols << " columns and " << numRows << " rows" << endl;
     out << numCols << "  " << numRows << endl;
+    copy << numCols << "  " << numRows << endl;
     const int constCols = 512;
     const int constRows = 512;
 
@@ -57,15 +54,16 @@ int main()
         for (col = 0; col < numCols; ++col)
         {
             ss >> array[row][col];
+            copy << array[row][col] << "  ";
         }
+        copy << endl;
     }
 
     int threshold = varianceThreshold();
     QuadTree image(Point(0, 0), Point(numRows, numCols), threshold);
     Node node(Point(numRows, numCols), *array);
-    cout << "ERR in next line, image.insert &node" << endl;
+    // ERROR NEXT LINE
     image.insert(&node);
-    cout << "after all ";
 
     for (row = 0; row < numRows; ++row)
     {
@@ -79,6 +77,7 @@ int main()
 
     infile.close();
     out.close();
+    copy.close();
 
     return 0;
 }
