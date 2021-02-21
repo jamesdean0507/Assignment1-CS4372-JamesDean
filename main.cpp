@@ -4,75 +4,106 @@
 #include <sstream>
 #include <cmath>
 
-#include "Point.cpp"
-#include "Node.cpp"
-#include "QuadTree.cpp"
-
 using namespace std;
 
+const int constCols = 512;
+
+const int constRows = 512;
 
 int varianceThreshold();
 
+void quad(int array[constRows][constCols], int threshold, int numRows, int numCols, int x, int y)
+{
+    double sumMean = 0, sumVar = 0, variance = 0;
+    int area = numRows * numCols;
+    int mean = 0;
+
+    //One Pixel
+    if (numRows == 1 && numCols == 1)
+    {
+        return;
+    }
+
+    //Calculate Mean
+    for(int i = x; i < x + numCols; i++)
+    {
+        for (int j = y; j < y + numRows; j++)
+        {
+            sumMean += array[i][j];
+        }
+    }
+    mean = sumMean / area;
+
+    //Calculate Variance
+    for(int i = x; i < x + numCols; i++)
+    {
+        for (int j = y; j < y + numRows; j++)
+        {
+            sumVar += pow(array[i][j] - mean, 2);
+        }
+    }
+    variance = sumVar / (area - 1);
+
+    if (variance <= threshold)
+    {
+        //Replace pixels under threshold with the mean
+        for(int i = x; i < x + numCols; i++)
+        {
+            for (int j = y; j < y + numRows; j++)
+            {
+                array[i][j] = mean;
+            }
+        }
+        return;
+    }
+    else
+    {
+        //Recursive call into 4 quads
+        quad(array, threshold, numRows/2, numCols/2, x, y);
+        quad(array, threshold, numRows/2, numCols/2, x + numCols/2, y);
+        quad(array, threshold, numRows/2, numCols/2, x, y + numRows/2);
+        quad(array, threshold, numRows/2, numCols/2, x + numCols/2, y + numRows/2);
+    }
+}
 
 int main()
 {
-    QuadTree qt;
-
-    int row = 0, col = 0, numCols = 0, numRows = 0;
+    int numCols = 0, numRows = 0, x = 0, y = 0;
     ifstream infile("baboon.pgma");
     stringstream ss;
     ofstream out;
     out.open("baboonOutput.pgma");
     string inputTxt = "";
 
-    // First line : version
     getline(infile, inputTxt);
-
-    if (inputTxt.compare("P2") != 0)
-        cerr << "Version error" << endl;
-    else
-        cout << "Version : " << inputTxt << endl;
-        out << inputTxt << endl;
-
-    // Second line : comment
-    getline(infile,inputTxt);
-    cout << "Comment : " << inputTxt << endl;
     out << inputTxt << endl;
 
-    // Continue with a stringstream
+    getline(infile,inputTxt);
+    out << inputTxt << endl;
+
     ss << infile.rdbuf();
 
-    // Third line : size
     ss >> numCols >> numRows;
-    cout << numCols << " columns and " << numRows << " rows" << endl;
     out << numCols << "  " << numRows << endl;
-    const int constCols = 512;
-    const int constRows = 512;
 
     int array[constRows][constCols];
 
-    // Following lines : data
-    for (row = 0; row < numRows; ++row)
+    for (int i = 0; i < numRows; ++i)
     {
-        for (col = 0; col < numCols; ++col)
+        for (int j = 0; j < numCols; ++j)
         {
-            ss >> array[row][col];
+            ss >> array[i][j];
         }
     }
 
     int threshold = varianceThreshold();
-    QuadTree image(Point(0, 0), Point(numRows, numCols), threshold);
-    Node node(Point(numRows, numCols), *array);
-    cout << "ERR in next line, image.insert &node" << endl;
-    image.insert(&node);
-    cout << "after all ";
+    quad(array, threshold, numRows, numCols, x, y);
 
-    for (row = 0; row < numRows; ++row)
+    for (int i = 0; i < numRows; ++i)
     {
-        for (col = 0; col < numCols; ++col)
+        for (int j = 0; j < numCols; ++j)
         {
-            out << image.find(Point(row, col))->data << "  ";
-            cout << image.find(Point(row, col))->data << "  ";
+            out << array[i][j] << " ";
         }
         out << endl;
     }
