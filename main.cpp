@@ -6,9 +6,9 @@
 
 using namespace std;
 
-const int constCols = 512;
+const int constCols = 200;
 
-const int constRows = 512;
+const int constRows = 300;
 
 int varianceThreshold();
 
@@ -69,10 +69,10 @@ void quad(int array[constRows][constCols], int threshold, int numRows, int numCo
 int main()
 {
     int numCols = 0, numRows = 0, x = 0, y = 0;
-    ifstream infile("baboon.pgma");
+    ifstream infile("tracks.ascii.pgm");
     stringstream ss;
     ofstream out;
-    out.open("output.pgma");
+    out.open("output.ascii.pgm");
     string inputTxt = "";
 
     getline(infile, inputTxt);
